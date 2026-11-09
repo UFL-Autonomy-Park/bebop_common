@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
+<package format="3">
+  <name>bebop_control</name>
+  <version>2.0.0</version>
+  <description>Velocity-level PID controller for the Parrot Bebop 2 quadcopters in the Indoor Lab</description>
+  <maintainer email="mgardenswartz@ufl.edu">Max Gardenswartz</maintainer>
+  <license>MPL-2.0</license>
+  <url type="repository">https://github.com/UFL-Autonomy-Park/bebop_common</url>
+  <url type="bugtracker">https://github.com/UFL-Autonomy-Park/bebop_common/issues</url>
+  <author email="mgardenswartz@ufl.edu">Max Gardenswartz</author>
+  <author email="brandonfallin@ufl.edu">Brandon Fallin</author>
+
+  <buildtool_depend>ament_cmake</buildtool_depend>
+
+  <depend>rclcpp</depend>
+  <depend>geometry_msgs</depend>
+  <depend>std_msgs</depend>
+  <depend>nav_msgs</depend>
+  <depend>tf2</depend>
+  <depend>tf2_geometry_msgs</depend>
+  
+  <test_depend>ament_lint_auto</test_depend>
+  <test_depend>ament_lint_common</test_depend>
+
+  <export>
+    <build_type>ament_cmake</build_type>
+  </export>
+</package>

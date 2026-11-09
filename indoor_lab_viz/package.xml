@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
+<package format="3">
+  <name>indoor_lab_viz</name>
+  <version>2.0.0</version>
+  <description>Visualizes the Indoor Lab flight volume (low and high borders) in RViz for a single Bebop</description>
+  <maintainer email="mgardenswartz@ufl.edu">Max Gardenswartz</maintainer>
+  <license>MPL-2.0</license>
+  <url type="repository">https://github.com/UFL-Autonomy-Park/bebop_common</url>
+  <url type="bugtracker">https://github.com/UFL-Autonomy-Park/bebop_common/issues</url>
+  <author email="brandonfallin@ufl.edu">Brandon Fallin</author>
+  <author email="mgardenswartz@ufl.edu">Max Gardenswartz</author>
+
+  <buildtool_depend>ament_cmake</buildtool_depend>
+
+  <test_depend>ament_lint_auto</test_depend>
+  <test_depend>ament_lint_common</test_depend>
+
+  <depend>rclcpp</depend>
+  <depend>geometry_msgs</depend>
+  <depend>std_msgs</depend>
+  <depend>visualization_msgs</depend>
+  <depend>tf2</depend>
+  <depend>tf2_ros</depend>
+  <depend>tf2_geometry_msgs</depend>
+
+
+  <export>
+    <build_type>ament_cmake</build_type>
+  </export>
+</package>
