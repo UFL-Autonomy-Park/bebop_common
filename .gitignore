@@ -67,3 +67,7 @@ COLCON_IGNORE
 AMENT_IGNORE
 
 # End of https://www.toptal.com/developers/gitignore/api/c++,ros2
+
+### Python ###
+__pycache__/
+*.egg-info/

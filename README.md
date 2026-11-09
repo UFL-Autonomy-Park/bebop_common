@@ -1,22 +1,43 @@
-# bebop_common
+<h1 align="center"> Bebop Common
+</h1>
+<div align="center">
 
-Shared ROS 2 workspace sources for flying Parrot Bebop 2 drones in the Indoor Lab: driver, motion-capture bridge, controller, teleop, filter and visualization.
+![Ubuntu](https://img.shields.io/badge/Ubuntu-E95420?style=for-the-badge&logo=ubuntu&logoColor=white)
+![ROS](https://img.shields.io/badge/ros-%230A0FF9.svg?style=for-the-badge&logo=ros&logoColor=white)
+![C++](https://img.shields.io/badge/c++-%2300599C.svg?style=for-the-badge&logo=c%2B%2B&logoColor=white)
+![Python](https://img.shields.io/badge/python-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54)
+
+A ROS 2 metapackage providing the common infrastructure needed to fly a Parrot Bebop 2 in the Indoor Lab with OptiTrack motion capture.
+It resembles a flight stack, with a driver, mocap bridge, low-level velocity control, teleoperation, filtering and visualization. Off-board research code sits on top of `bebop_bringup`; `bebop_guidance` is a working example.
+
+> [!IMPORTANT]
+> This repo supports a **single agent only** (one Bebop at a time). Multi-agent flight is not supported.
+
+</div>
 
 **Requirements:** Ubuntu 22.04, ROS 2 Humble.
 
 ## Packages
 
-| Package | Description | Origin | License |
-| --- | --- | --- | --- |
-| `bebop_control` | Velocity-level PID controller; turns desired velocity + odometry into Bebop `cmd_vel` | this repo | MPL-2.0 |
-| `bebop_teleop` | Maps a console controller (Xbox / DualShock) to Bebop actions. May need launch-file updates | this repo | MPL-2.0 |
-| `indoor_lab_viz` | Publishes the lab's flight-volume borders and an RViz config | this repo | MPL-2.0 |
-| `rho_filter` | Exponentially convergent first-order differentiator for noisy signals (math by Cristian Nino) | submodule ([rho_filter](https://github.com/UFL-Autonomy-Park/rho_filter)) | MPL-2.0 |
-| `ros2_parrot_arsdk` | colcon wrapper that downloads and builds the Parrot ARSDK | submodule, fork of [jeremyfix/ros2_parrot_arsdk](https://github.com/jeremyfix/ros2_parrot_arsdk) | BSD-3 |
-| `ros2_bebop_driver` | ROS 2 rewrite of `bebop_autonomy`; publishers/subscribers for core Bebop functionality | submodule, fork of [jeremyfix/ros2_bebop_driver](https://github.com/jeremyfix/ros2_bebop_driver) | BSD-3 |
-| `vrpn_mocap` | Turns VRPN messages from OptiTrack Motive into ROS 2 messages | submodule, fork of [alvinsunyixiao/vrpn_mocap](https://github.com/alvinsunyixiao/vrpn_mocap) | MIT |
+| Name | Description |
+|---|---|
+| bebop_bringup | Launch file that starts the full single-agent stack. Requires a `params_file`. |
+| bebop_control | Velocity-level PI controller; turns a desired velocity and odometry into Bebop `cmd_vel`. |
+| bebop_teleop | Maps a console controller (Xbox / DualShock) to Bebop actions and mode switching. |
+| indoor_lab_viz | Publishes the lab's flight-volume borders for RViz. |
+| rho_filter | Exponentially convergent first-order differentiator (math by Cristian Nino). |
+| bebop_guidance | **Example** off-board RISE trajectory-tracking controller. Copy it as a template for your own. |
+| ros2_parrot_arsdk | colcon wrapper that builds the Parrot ARSDK. Submodule, fork of [jeremyfix/ros2_parrot_arsdk](https://github.com/jeremyfix/ros2_parrot_arsdk). |
+| ros2_bebop_driver | ROS 2 Bebop driver. Submodule, fork of [jeremyfix/ros2_bebop_driver](https://github.com/jeremyfix/ros2_bebop_driver). |
+| vrpn_mocap | VRPN client for OptiTrack Motive. Submodule, fork of [alvinsunyixiao/vrpn_mocap](https://github.com/alvinsunyixiao/vrpn_mocap). |
 
-The first three packages live directly in this repo. The other four are git submodules. Do not edit the three forks (`ros2_parrot_arsdk`, `ros2_bebop_driver`, `vrpn_mocap`) here; this repo only pins them.
+The forks keep their upstream licenses (BSD-3 / MIT) and are not edited here. Everything else is [MPL 2.0](LICENSE).
+
+```
+mocap ─► vrpn_mocap ─► rho_filter ─► your off-board node ─► bebop_control ─► ros2_bebop_driver ─► Bebop
+                                      (e.g. bebop_guidance)       ▲
+                                                          bebop_teleop (mode + manual)
+```
 
 ## Installation
 
@@ -26,15 +47,14 @@ cd ~/<your_ws_name>/src
 git clone --recurse-submodules https://github.com/UFL-Autonomy-Park/bebop_common.git
 ```
 
-If you already cloned without `--recurse-submodules`:
-
+The three forks (`ros2_parrot_arsdk`, `ros2_bebop_driver`, `vrpn_mocap`) are git submodules and are empty after a plain clone. To pull them in:
 ```bash
 git submodule update --init --recursive
 ```
 
 ### System dependencies
 
-Run all of these before the first build:
+Run these before the first build:
 
 ```bash
 # ros2_parrot_arsdk
@@ -43,7 +63,7 @@ sudo apt install libavahi-client-dev
 # ros2_bebop_driver
 sudo apt install ros-humble-camera-info-manager libavdevice-dev
 
-# vrpn_mocap (and any other missing ROS dependencies, e.g. vrpn)
+# vrpn_mocap and any other missing ROS dependencies
 cd ~/<your_ws_name>
 rosdep install --from-paths src -y --ignore-src
 
@@ -51,14 +71,11 @@ rosdep install --from-paths src -y --ignore-src
 git config --global color.ui auto
 ```
 
-**Why `color.ui`?** `ros2_parrot_arsdk` downloads Google's `repo` tool, which asks an interactive question about colored output the first time it runs. Under `colcon` that prompt is invisible and the build hangs. `git config --global color.ui auto` answers it ahead of time.
-
-If the ARSDK build still hangs, answer the prompt manually once, then rebuild with colcon:
+**Why `color.ui`?** `ros2_parrot_arsdk` downloads Google's `repo` tool, which asks an interactive question about colored output on first run. Under `colcon` that prompt is invisible and the build hangs. This setting answers it ahead of time. If the build still hangs, answer the prompt once by hand, then rebuild:
 
 ```bash
 cd ~/<your_ws_name>/src/bebop_common/ros2_parrot_arsdk
-mkdir build && cd build
-cmake .. && make
+mkdir build && cd build && cmake .. && make
 ```
 
 ### Build
@@ -69,38 +86,30 @@ colcon build --symlink-install
 source install/setup.bash
 ```
 
-The first build takes a few minutes, mostly `ros2_parrot_arsdk` (it downloads and compiles the Parrot SDK, so it needs internet access). It will not work offline. `ros2_bebop_driver` depends on `ros2_parrot_arsdk`, and colcon orders them for you. To rebuild just your own packages: `colcon build --symlink-install --packages-select bebop_control bebop_teleop indoor_lab_viz rho_filter`.
+The first build takes a few minutes and needs internet access (the ARSDK is downloaded and compiled). `ros2_bebop_driver` depends on `ros2_parrot_arsdk`; colcon orders them for you.
 
-## Running the forked packages
+## Usage
 
-**Bebop driver** (connect to the drone's Wi-Fi first; the default IP is `192.168.42.1`):
+Every node here declares its parameters without defaults, so you must supply a parameter file. `bebop_guidance/config/main.yaml` is a complete, tuned example.
 
+**Run the example:**
 ```bash
-ros2 launch ros2_bebop_driver bebop_node_launch.xml ip:=<BEBOP.IP.ADDRESS> namespace:=bebop
+ros2 launch bebop_guidance main.launch.py bebop_number:=106 joy_type:=xbox
 ```
 
-To debug under gdb:
-
+**Run just the common stack** (for your own off-board node):
 ```bash
-ros2 run --prefix 'gdb -ex run --args' ros2_bebop_driver bebop_driver --ros-args -p bebop_ip:=<BEBOP.IP.ADDRESS>
+ros2 launch bebop_bringup bringup.launch.py params_file:=/abs/path/to/your.yaml bebop_number:=106
 ```
 
-**Motion capture** (VRPN server from OptiTrack Motive):
+`bebop_number` sets the namespace (`bebop<N>`) and the drone's IP (`192.168.1.<N>`). Pass `rviz_config:=<file>` to open RViz, and `save_data:=false` to skip the rosbag.
 
-```bash
-ros2 launch vrpn_mocap client.launch.yaml server:=<server ip> port:=3883
-```
+**Writing your own off-board layer:** copy `bebop_guidance`, replace the node, and keep the interface. Subscribe to `pose` (remapped to `/vrpn_mocap/<ns>/pose`), `odom` and `mode`; publish the desired velocity on `cmd_vel_des`. The mode is `0` for teleop and `1` for off-board.
 
-Poses appear on `/vrpn_mocap/<tracker_name>/pose` (and `twist` / `accel` if the mocap system reports them). See `vrpn_mocap/README.md` for all parameters.
+## Docs
 
-## Orientation
+- [Coordinate frames and conventions](docs/coordinate_frames.md): read this before writing any controller.
 
-Rough data flow: `vrpn_mocap` (pose) → `rho_filter` (filtered odometry on `filtered_odom`) → `bebop_control` (reads odometry, a desired-velocity `Twist` and a mode `Int32`; publishes `cmd_vel`) → `ros2_bebop_driver` → drone. `bebop_teleop` supplies the operator's commands and `indoor_lab_viz` draws the flight volume in RViz.
+## Known issues
 
-Parameters are declared without defaults in `bebop_control` and `rho_filter`, so each node needs a parameter file (see the `declare_parameter` calls in `src/`).
-
-## Contributing and licensing
-
-- Own packages (`bebop_control`, `bebop_teleop`, `indoor_lab_viz`, `rho_filter`) are licensed under [MPL 2.0](LICENSE); each source file carries the MPL header. The forks keep their upstream licenses.
-- Each package's `package.xml` carries its description, maintainer and license.
-- To update a submodule: `cd <submodule> && git pull origin main && cd .. && git add <submodule> && git commit`.
+See the [issue tracker](https://github.com/UFL-Autonomy-Park/bebop_common/issues).

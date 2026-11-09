@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
+<package format="3">
+  <name>rho_filter</name>
+  <version>2.0.0</version>
+  <description>An exponentially convergent first-order differentiator for noisy signals. Math by Cristian Nino.</description>
+  <maintainer email="mgardenswartz@ufl.edu">Max Gardenswartz</maintainer>
+  <license>MPL-2.0</license>
+  <url type="repository">https://github.com/UFL-Autonomy-Park/bebop_common</url>
+  <url type="bugtracker">https://github.com/UFL-Autonomy-Park/bebop_common/issues</url>
+  <author email="mgardenswartz@ufl.edu">Max Gardenswartz</author>
+  <author>Cristian Nino</author>
+
+  <buildtool_depend>ament_cmake</buildtool_depend>
+
+  <depend>rclcpp</depend>
+  <depend>geometry_msgs</depend>
+  <depend>nav_msgs</depend>
+  <depend>tf2</depend>
+  <depend>tf2_eigen</depend>
+  <depend>tf2_geometry_msgs</depend>
+  <depend>eigen3_cmake_module</depend>
+  <depend>Eigen3</depend>
+
+  <export>
+    <build_type>ament_cmake</build_type>
+  </export>
+</package>

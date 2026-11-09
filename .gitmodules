@@ -7,6 +7,3 @@
 [submodule "vrpn_mocap"]
     path = vrpn_mocap
     url = ../vrpn_mocap.git
-[submodule "rho_filter"]
-	path = rho_filter
-	url = ../rho_filter.git
