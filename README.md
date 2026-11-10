@@ -77,12 +77,7 @@ Required, or the ARSDK build hangs (see below):
 git config --global color.ui auto
 ```
 
-**Why `color.ui`?** `ros2_parrot_arsdk` downloads Google's `repo` tool, which asks an interactive question about colored output on first run. Under `colcon` that prompt is invisible and the build hangs. This setting answers it ahead of time. If the build still hangs, answer the prompt once by hand, then rebuild:
-
-```bash
-cd ~/<your_ws_name>/src/bebop_common/ros2_parrot_arsdk
-mkdir build && cd build && cmake .. && make
-```
+See the ARSDK fork if you're still stuck.
 
 ### Build
 
