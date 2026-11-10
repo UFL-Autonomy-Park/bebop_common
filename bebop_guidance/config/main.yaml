@@ -43,8 +43,8 @@
   ros__parameters:
     x_axis: 4
     y_axis: 3
-    z_axis: 2
-    yaw_axis: 1
+    z_axis: 1
+    yaw_axis: 0
     takeoff_button: 9
     land_button: 8
     mode_button: 0
