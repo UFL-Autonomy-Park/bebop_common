@@ -18,7 +18,6 @@ from launch_ros.actions import Node
 
 def launch_setup(context, *args, **kwargs):
     bebop_num_str = LaunchConfiguration('bebop_number').perform(context)
-    joy_type_str = LaunchConfiguration('joy_type').perform(context)
     params_file = LaunchConfiguration('params_file').perform(context)
     rviz_config = LaunchConfiguration('rviz_config').perform(context)
     save_data_val = LaunchConfiguration('save_data').perform(context).lower()
@@ -27,14 +26,6 @@ def launch_setup(context, *args, **kwargs):
 
     namespace = f'bebop{bebop_num_str}'
     bebop_ip = f'192.168.1.{bebop_num_str}'
-
-    pkg_teleop = get_package_share_directory('bebop_teleop')
-    joy_maps = {
-        'xbox': os.path.join(pkg_teleop, 'config', 'xbox_controller.yaml'),
-        'dualshock': os.path.join(pkg_teleop, 'config', 'sony_dualshock3.yaml'),
-    }
-    if joy_type_str not in joy_maps:
-        raise RuntimeError(f"Joystick type '{joy_type_str}' is not supported. Choose from {list(joy_maps)}.")
 
     nodes = [
         Node(
@@ -48,7 +39,7 @@ def launch_setup(context, *args, **kwargs):
             parameters=[params_file], output='screen'),
         Node(
             package='bebop_teleop', executable='bebop_teleop_node', name='bebop_teleop',
-            namespace=namespace, parameters=[params_file, joy_maps[joy_type_str]], output='screen'),
+            namespace=namespace, parameters=[params_file], output='screen'),
         Node(
             package='rho_filter', executable='rho_filter_node', name='rho_filter',
             namespace=namespace, output='screen',
@@ -99,7 +90,6 @@ def generate_launch_description():
     return LaunchDescription([
         DeclareLaunchArgument('params_file', description='Absolute path to the YAML parameter file (required)'),
         DeclareLaunchArgument('bebop_number', default_value='106', description='Drone number; sets namespace bebop<N> and IP 192.168.1.<N>'),
-        DeclareLaunchArgument('joy_type', default_value='xbox', description='xbox or dualshock'),
         DeclareLaunchArgument('rviz_config', default_value='', description='Path to an RViz config; RViz is skipped if empty'),
         DeclareLaunchArgument('save_data', default_value='true', description='Record a rosbag to ~/Desktop'),
         DeclareLaunchArgument('bag_name', default_value='bebop_data', description='Rosbag name prefix'),

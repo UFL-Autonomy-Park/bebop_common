@@ -41,9 +41,8 @@ class BebopGuidance(Node):
         self.vel_max_mps = self._get_double('control_gains.vel_max_mps')
 
         # --- Selectors ---
-        self.artificial_drift_on = self._get_bool('artificial_drift_on')
         self.controller_type = self._get_str('controller_type')
-        self.valid_controller_types = ["proportional", "baseline_rise"]
+        self.valid_controller_types = ["proportional", "rise"]
         if self.controller_type not in self.valid_controller_types:
             raise ValueError(f"Not a valid controller type. Choose from: {self.valid_controller_types}.")
 
@@ -93,10 +92,6 @@ class BebopGuidance(Node):
     def _get_int(self, name):
         self.declare_parameter(name, rclpy.Parameter.Type.INTEGER)
         return self.get_parameter(name).get_parameter_value().integer_value
-
-    def _get_bool(self, name):
-        self.declare_parameter(name, rclpy.Parameter.Type.BOOL)
-        return self.get_parameter(name).get_parameter_value().bool_value
 
     def _get_str(self, name):
         self.declare_parameter(name, rclpy.Parameter.Type.STRING)
@@ -203,10 +198,7 @@ class BebopGuidance(Node):
             cmd_vel_lat  = (self.k1 + self.k2) * e_lat + self.integral_term_lat_ #+ traj_deriv_lat
             cmd_vel_vert = (self.k1_y + self.k2_y) * e_vert + self.integral_term_vert_ #+ traj_deriv_vert
 
-        # Artificial drift
         cmd_vel = np.array([cmd_vel_lat[0], cmd_vel_vert[0], cmd_vel_lat[1]])
-        if self.artificial_drift_on:
-            cmd_vel += self.artificial_drift(drone_position=x_3d)
 
         # --- Saturation & Publishing ---
         norm = np.linalg.norm(cmd_vel)
@@ -241,35 +233,6 @@ class BebopGuidance(Node):
 
         self.trajectory_buffer.append(self._make_point(pos_setpoint))
         self.trajectory_buffer_pub_.publish(self._make_line_strip_marker(frame_id, list(self.trajectory_buffer), 1.0, 0.0, 0.0))
-
-    @staticmethod
-    def artificial_drift(drone_position: np.ndarray) -> np.ndarray:
-        """
-        Calculates a spatially varying 3D drift field bounded at 0.5 m/s.
-        Lab Dimensions: x=13.5, y=2.75, z=5.5
-        """
-        # Lab dimensions (meters)
-        L = np.array([13.5, 2.75, 5.5])
-        x, y, z = drone_position
-
-        # Generate a complex, spatially dependent raw vector
-        # vx varies primarily with length (x)
-        # vy creates a coupling between lateral position and longitudinal progress
-        # vz creates a vertical gust depending on height
-        vx = 0.4 * np.sin(2 * np.pi * x / L[0])
-        vy = 0.4 * np.cos(np.pi * y / L[1] + np.pi * x / L[0])
-        vz = 0.4 * np.sin(np.pi * z / L[2])
-
-        drift_raw = np.array([vx, vy, vz])
-
-        # 2-norm normalization to strictly enforce the 0.5 m/s limit
-        magnitude = np.linalg.norm(drift_raw)
-        max_magnitude = 0.5
-        
-        # If magnitude > 0.5, scale it down; otherwise, leave it alone.
-        scale = max_magnitude / magnitude if magnitude > max_magnitude else 1.0
-        
-        return drift_raw * scale
 
 def main(args=None):
     rclpy.init(args=args)

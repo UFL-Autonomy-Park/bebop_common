@@ -30,7 +30,7 @@ install(TARGETS ${PROJECT_NAME}_node
     DESTINATION lib/${PROJECT_NAME}
 )
 
-install(DIRECTORY launch rviz
+install(DIRECTORY rviz
     DESTINATION share/${PROJECT_NAME}
 )
 

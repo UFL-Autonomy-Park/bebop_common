@@ -3,7 +3,7 @@
 <package format="3">
     <name>bebop_teleop</name>
     <version>2.0.0</version>
-    <description>Maps a console controller (Xbox or DualShock) to takeoff, landing, mode switching and manual velocity commands for a single Bebop</description>
+    <description>Maps a console controller to takeoff, landing, mode switching and manual velocity commands for a single Bebop</description>
     <maintainer email="mgardenswartz@ufl.edu">Max Gardenswartz</maintainer>
     <license>MPL-2.0</license>
     <url type="repository">https://github.com/UFL-Autonomy-Park/bebop_common</url>

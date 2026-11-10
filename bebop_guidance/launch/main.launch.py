@@ -28,7 +28,6 @@ def generate_launch_description():
             'params_file': params_file,
             'rviz_config': rviz_config,
             'bebop_number': bebop_number,
-            'joy_type': LaunchConfiguration('joy_type'),
             'save_data': LaunchConfiguration('save_data'),
             'bag_name': LaunchConfiguration('bag_name'),
             'extra_bag_topics': '/{ns}/tracking_error /{ns}/cmd_vel_des /{ns}/trajectory_setpoint',
@@ -45,7 +44,6 @@ def generate_launch_description():
         DeclareLaunchArgument('bebop_number', default_value='106'),
         DeclareLaunchArgument('save_data', default_value='true'),
         DeclareLaunchArgument('bag_name', default_value='rise_controller_data'),
-        DeclareLaunchArgument('joy_type', default_value='xbox'),
         bringup,
         guidance,
     ])

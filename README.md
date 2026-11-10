@@ -23,7 +23,7 @@ It resembles a flight stack, with a driver, mocap bridge, low-level velocity con
 |---|---|
 | bebop_bringup | Launch file that starts the full single-agent stack. Requires a `params_file`. |
 | bebop_control | Velocity-level PI controller; turns a desired velocity and odometry into Bebop `cmd_vel`. |
-| bebop_teleop | Maps a console controller (Xbox / DualShock) to Bebop actions and mode switching. |
+| bebop_teleop | Maps a console controller to Bebop actions and mode switching (button 9 takeoff, 8 land, 0 mode). |
 | indoor_lab_viz | Publishes the lab's flight-volume borders for RViz. |
 | rho_filter | Exponentially convergent first-order differentiator (math by Cristian Nino). |
 | bebop_guidance | **Example** off-board RISE trajectory-tracking controller. Copy it as a template for your own. |
@@ -54,20 +54,26 @@ git submodule update --init --recursive
 
 ### System dependencies
 
-Run these before the first build:
+Run these before the first build.
 
+For `ros2_parrot_arsdk`:
 ```bash
-# ros2_parrot_arsdk
 sudo apt install libavahi-client-dev
+```
 
-# ros2_bebop_driver
+For `ros2_bebop_driver`:
+```bash
 sudo apt install ros-humble-camera-info-manager libavdevice-dev
+```
 
-# vrpn_mocap and any other missing ROS dependencies
+For `vrpn_mocap` and any other missing ROS dependencies:
+```bash
 cd ~/<your_ws_name>
 rosdep install --from-paths src -y --ignore-src
+```
 
-# Required, or the ARSDK build hangs (see below)
+Required, or the ARSDK build hangs (see below):
+```bash
 git config --global color.ui auto
 ```
 
@@ -90,11 +96,11 @@ The first build takes a few minutes and needs internet access (the ARSDK is down
 
 ## Usage
 
-Every node here declares its parameters without defaults, so you must supply a parameter file. `bebop_guidance/config/main.yaml` is a complete, tuned example.
+Every node here declares its parameters without defaults, so you must supply a parameter file. `bebop_guidance/config/main.yaml` is the single source of truth for parameters: a complete, tuned example covering every node in the stack. The guidance node's parameters are `controller_type` (`proportional` or `rise`) and the `control_gains` block; it tracks a time-explicit trajectory.
 
 **Run the example:**
 ```bash
-ros2 launch bebop_guidance main.launch.py bebop_number:=106 joy_type:=xbox
+ros2 launch bebop_guidance main.launch.py bebop_number:=106
 ```
 
 **Run just the common stack** (for your own off-board node):

@@ -50,7 +50,6 @@ install(TARGETS ${PROJECT_NAME} rho_filter_node
   RUNTIME DESTINATION lib/${PROJECT_NAME}
 )
 
-install(DIRECTORY launch DESTINATION share/${PROJECT_NAME})
 install(DIRECTORY include/ DESTINATION include/)
 
 ament_package()
