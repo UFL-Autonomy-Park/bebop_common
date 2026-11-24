@@ -1,0 +1,49 @@
+ncr_cbf_node:
+  ros__parameters:
+    location: indoor_lab
+    robot_names: [bebop112]
+    cbf_rate_hz: 50
+    pose_timeout_sec: 0.5
+    cmd_vel_timeout_sec: 0.5
+
+    room_geometry:
+      x_min: -2.5
+      x_max: 2.5
+      y_min: 0.0
+      y_max: 2.5
+      z_min: -7.0
+      z_max: 7.0
+
+    robots:
+      bebop112:
+        pose_topic: /vrpn_mocap/bebop112/pose
+        unsafe_cmd_vel_topic: /bebop112/cmd_vel_des_unsafe
+        safe_cmd_vel_topic: /bebop112/cmd_vel_des
+        radius: 0.25
+        room_constraints:
+          enabled: true
+          enabled_faces: [x_min, x_max, y_max, z_min, z_max]
+          kappa: 2.0
+        saturation_constraints:
+          enabled: true
+          componentwise_vel_bound: [0.75, 0.75, 0.75]
+
+    #   bebop113:
+    #     pose_topic: /vrpn_mocap/bebop113/pose
+    #     unsafe_cmd_vel_topic: /bebop113/cmd_vel_des_unsafe
+    #     safe_cmd_vel_topic: /bebop113/cmd_vel_des
+    #     radius: 0.25
+    #     room_constraints:
+    #       enabled: true
+    #       enabled_faces: [x_min, x_max, y_max, z_min, z_max]
+    #       kappa: 2.0
+    #     saturation_constraints:
+    #       enabled: true
+    #       componentwise_vel_bound: [0.75, 0.75, 0.75]
+
+    # robot_pair_names: [bebop112_bebop113]
+    # robot_pairs:
+    #   bebop112_bebop113:
+    #     robots: [bebop112, bebop113]
+    #     kappa: 0.5
+    #     safety_buffer: 0.05

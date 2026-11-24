@@ -1,0 +1,23 @@
+/bebop112/bebop_driver_node:
+  ros__parameters:
+    bebop_ip: "192.168.1.112"
+    camera_calibration_file: "package://ros2_bebop_driver/config/bebop2_camera_calib.yaml"
+    max_tilt_angle: 17.5
+    max_rotation_speed: 200.0
+
+/bebop112/bebop_control_node:
+  ros__parameters:
+    log_throttle_duration_ms: 1000
+    stale_command_timeout_sec: 0.2
+    stale_odom_timeout_sec: 0.1
+    control_gains:
+      kp_tilt_effort: 0.3
+      ki_tilt_effort: 0.01
+
+/bebop112/rho_filter_node:
+  ros__parameters:
+    rho_filter_gains:
+      k1: 10.0
+      k2: 10.0
+      k3: 6.0
+      k4: 0.5

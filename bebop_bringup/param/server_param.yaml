@@ -1,4 +1,4 @@
-/**:
+bebop_server_node:
   ros__parameters:
     x_axis: 1 # LEFT STICK UP/DOWN
     y_axis: 0 # LEFT STICK RIGHT/LEFT
