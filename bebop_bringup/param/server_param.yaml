@@ -13,7 +13,7 @@ bebop_server_node:
 
     x_vel_max: 1.0
     y_vel_max: 1.0
-    z_vel_max: 1.0
+    z_vel_max: -1.0 # MAKES DIRECTION CONSISTENT WITH ROOM
     yaw_vel_max: 1.0
 
     joy_timeout_sec: 0.5
