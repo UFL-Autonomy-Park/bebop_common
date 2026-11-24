@@ -60,11 +60,11 @@ public:
             10
         );
 
-        RCLCPP_INFO_STREAM(this->get_logger(), "Low-level Bebop controller active. Listening for cmd_vel");
+        RCLCPP_INFO_STREAM(this->get_logger(), "Low-level Bebop controller active. Listening for cmd_vel_des");
     }
 
 private:
-    enum class FlightMode { TELEOP = 0, OFFBOARD = 1 };
+    enum class FlightMode { hold=0, teleop = 1, offboard = 2 };
 
     // State
     TwistMsg target_vel_mocap_; // Desired veloicty in the world/mocap frame
@@ -91,7 +91,7 @@ private:
     int LOG_THROTTLE_DURATION_MS;
     double STALE_COMMAND_TIMEOUT_SEC;
     double STALE_ODOM_TIMEOUT_SEC;
-    FlightMode current_mode_ = FlightMode::TELEOP;
+    FlightMode current_mode_ = FlightMode::hold;
 
     rclcpp::Subscription<OdomMsg>::SharedPtr odom_sub_;
     rclcpp::Subscription<TwistMsg>::SharedPtr des_vel_sub_;
@@ -105,12 +105,8 @@ private:
             return;
         }
 
-        if (current_mode_ != FlightMode::OFFBOARD) {
-            err_sum_x_ = 0.0;
-            err_sum_y_ = 0.0;
-            RCLCPP_WARN(this->get_logger(), "Not in offboard mode.");
-            return;
-        }
+        // All modes (hold, teleop, offboard) arrive on cmd_vel_des via the CBF,
+        // and this node is the sole writer of cmd_vel, so the loop runs in every mode.
 
         // Active transform from world/mocap frame to body frame
         rot_body_to_mocap_.normalize(); 
@@ -199,7 +195,7 @@ private:
             throw std::runtime_error("Received infinity/NaN in odometry message");
         }
         
-        if (current_mode_ == FlightMode::OFFBOARD && cmd_received_)
+        if (cmd_received_)
         {
             if ((this->now() - last_cmd_time_) >= rclcpp::Duration::from_seconds(STALE_COMMAND_TIMEOUT_SEC))
             {
@@ -227,14 +223,30 @@ private:
     }
 
     void bebopModeCallback(const std_msgs::msg::Int32::SharedPtr msg) {
-        if (current_mode_ == FlightMode::TELEOP && msg->data == static_cast<int>(FlightMode::OFFBOARD))
+        if (msg->data < static_cast<int>(FlightMode::hold) || msg->data > static_cast<int>(FlightMode::offboard))
         {
-            RCLCPP_INFO(this->get_logger(), "Switching to OFFBOARD, freshening control time stamp");
+            RCLCPP_ERROR_THROTTLE(
+                this->get_logger(),
+                *this->get_clock(),
+                LOG_THROTTLE_DURATION_MS,
+                "Ignoring invalid mode %d", msg->data
+            );
+            return;
+        }
+
+        const auto new_mode = static_cast<FlightMode>(msg->data);
+        if (new_mode != current_mode_)
+        {
+            // The command source changes (client <-> off-board node), so drop integrator
+            // state from the previous source and give the new one a fresh timeout window.
+            RCLCPP_INFO(this->get_logger(), "Mode changed %d -> %d, resetting integrators", static_cast<int>(current_mode_), msg->data);
             last_cmd_time_ = this->now();
             err_sum_x_ = 0.0;
             err_sum_y_ = 0.0;
+            integrator_on_x_ = true;
+            integrator_on_y_ = true;
         }
-        current_mode_ = static_cast<FlightMode>(msg->data);
+        current_mode_ = new_mode;
     }
 };
 
