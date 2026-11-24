@@ -13,3 +13,6 @@
 [submodule "bebop_client"]
 	path = bebop_client
 	url = https://github.com/UFL-Autonomy-Park/bebop_client.git
+[submodule "ncr_cbf"]
+	path = ncr_cbf
+	url = https://github.com/UFL-Autonomy-Park/ncr_cbf.git

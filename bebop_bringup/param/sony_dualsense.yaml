@@ -1,0 +1,19 @@
+/**:
+  ros__parameters:
+    x_axis: 1 # LEFT STICK UP/DOWN
+    y_axis: 0 # LEFT STICK RIGHT/LEFT
+    z_axis: 4 # RIGHT STICK UP/DOWN
+    yaw_axis: 3 # RIGHT STICK LEFT/RIGHT
+    selector_axis: 6 # D-PAD RIGHT
+
+    single_bebop_mode_button: 0 # CROSS (X) BUTTON
+    takeoff_button: 9 # OPTIONS (START) BUTTON
+    land_button: 7 # CREATE (SELECT) BUTTON
+    toggle_global_offboard_button: 2 # TRIANGLE BUTTON
+
+    x_vel_max: 1.0
+    y_vel_max: 1.0
+    z_vel_max: 1.0
+    yaw_vel_max: 1.0
+
+    joy_timeout_sec: 0.5
