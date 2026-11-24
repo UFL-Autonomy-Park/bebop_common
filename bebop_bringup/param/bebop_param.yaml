@@ -29,3 +29,36 @@
       child: bebop112/base_link
     topics:
       input_pose: /vrpn_mocap/bebop112/pose
+
+# bebop113 support
+/bebop113/bebop_driver_node:
+  ros__parameters:
+    bebop_ip: "192.168.1.113"
+    camera_calibration_file: "package://ros2_bebop_driver/config/bebop2_camera_calib.yaml"
+    max_tilt_angle: 17.5
+    max_rotation_speed: 200.0
+
+/bebop113/bebop_control_node:
+  ros__parameters:
+    control_freq_hz: 50.0 # Control loop frequency in Hz
+    max_vertical_speed: 1.0 # m/s (range: 0.5 to 2.5)
+    max_tilt_angle: 17.5 # deg (range: 5.0 to 30.0)
+    log_throttle_duration_ms: 1000
+    stale_command_timeout_sec: 0.2
+    stale_odom_timeout_sec: 0.1
+    control_gains:
+      kp_tilt_effort: 0.3
+      ki_tilt_effort: 0.01
+
+/bebop113/rho_filter_node:
+  ros__parameters:
+    rho_filter_gains:
+      k1: 10.0
+      k2: 10.0
+      k3: 6.0
+      k4: 0.5
+    frames:
+      parent: odom
+      child: bebop113/base_link
+    topics:
+      input_pose: /vrpn_mocap/bebop113/pose

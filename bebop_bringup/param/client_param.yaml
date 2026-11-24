@@ -9,3 +9,15 @@
     transition_rate_hz: 1 # int
     transition_timeout_sec: 3.0 # double
     teleop_timeout_sec: 1.0 # double
+
+/bebop113/bebop_client_node:
+  ros__parameters:
+    bebop_id: bebop113 # string
+    pose_topic: /vrpn_mocap/bebop113/pose # string
+    unsafe_cmd_vel_topic: /bebop113/cmd_vel_des_unsafe # string
+    tol_floor: 0.25 # double
+    cmd_vel_rate_hz: 50 # int
+    state_rate_hz: 2 # int
+    transition_rate_hz: 1 # int
+    transition_timeout_sec: 3.0 # double
+    teleop_timeout_sec: 1.0 # double
