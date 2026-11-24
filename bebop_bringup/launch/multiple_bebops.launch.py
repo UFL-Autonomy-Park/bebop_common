@@ -60,11 +60,12 @@ OUTPUT_DIR = (
     + str(date.minute)
 )
 BAG_NAME = "bebop_flight_test"
-AGENT_NAMES = ["bebop112"]
+AGENT_NAMES = ["bebop112", "bebop113"]
 
 pose_list = [f"/vrpn_mocap/{agent_name}/pose" for agent_name in (AGENT_NAMES)]
 
 cmd_vel_list = [
+    "/bebop112/cmd_vel_des",
     "/bebop112/cmd_vel_des",
 ]
 
@@ -142,6 +143,39 @@ def generate_launch_description():
             executable="bebop_client_node",
             name="bebop_client_node",
             namespace="bebop112",
+            parameters=[CLIENT_PARAM],
+            output="screen",
+        ),
+        # bebop113 support
+        Node(
+            package="ros2_bebop_driver",
+            executable="bebop_driver",  # check this
+            name="bebop_driver_node",
+            namespace="bebop113",
+            parameters=[BEBOP_PARAM],
+            output="screen",
+        ),
+        Node(
+            package="rho_filter",
+            executable="rho_filter_node",
+            name="rho_filter_node",
+            namespace="bebop113",
+            parameters=[BEBOP_PARAM],
+            output="screen",
+        ),
+        Node(
+            package="bebop_control",
+            executable="bebop_control_node",
+            name="bebop_control_node",
+            namespace="bebop113",
+            parameters=[BEBOP_PARAM],
+            output="screen",
+        ),
+        Node(
+            package="bebop_client",
+            executable="bebop_client_node",
+            name="bebop_client_node",
+            namespace="bebop113",
             parameters=[CLIENT_PARAM],
             output="screen",
         ),
