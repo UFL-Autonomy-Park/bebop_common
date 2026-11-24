@@ -1,4 +1,4 @@
-/bebop112/bebop_driver:
+/bebop112/bebop_driver_node:
   ros__parameters:
     bebop_ip: "192.168.1.112"
     camera_calibration_file: "package://ros2_bebop_driver/config/bebop2_camera_calib.yaml"
@@ -26,6 +26,6 @@
       k4: 0.5
     frames:
       parent: odom
-      child: /bebop112/base_link
+      child: bebop112/base_link
     topics:
       input_pose: /vrpn_mocap/bebop112/pose
