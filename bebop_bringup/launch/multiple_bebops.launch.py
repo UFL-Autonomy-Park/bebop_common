@@ -20,27 +20,27 @@ def cfg_path(ros_package_name: str, subdirectory: str, filename: str):
 NCR_PARAM = cfg_path(
     ros_package_name="bebop_bringup",
     subdirectory="param",
-    filename="ncr_param.yml",
+    filename="ncr_param.yaml",
 )
 CLIENT_PARAM = cfg_path(
     ros_package_name="bebop_bringup",
     subdirectory="param",
-    filename="client_param.yml",
+    filename="client_param.yaml",
 )
 SERVER_PARAM = cfg_path(
     ros_package_name="bebop_bringup",
     subdirectory="param",
-    filename="server_param.yml",
+    filename="server_param.yaml",
 )
 BEBOP_PARAM = cfg_path(
     ros_package_name="bebop_bringup",
     subdirectory="param",
-    filename="bebop_param.yml",
+    filename="bebop_param.yaml",
 )
 CBF_PARAM = cfg_path(
     ros_package_name="bebop_bringup",
     subdirectory="param",
-    filename="cbf_param.yml",
+    filename="cbf_param.yaml",
 )
 
 
@@ -84,10 +84,10 @@ def generate_launch_description():
             output="screen",
         ),
         Node(
-            package="ncr_lab_viz",
-            executable="ncr_lab_viz_node",
-            name="ncr_lab_viz_node",
-            namespace="ncr_lab_viz",
+            package="indoor_lab_viz",
+            executable="indoor_lab_viz_node",
+            name="indoor_lab_viz_node",
+            namespace="indoor_lab_viz",
             parameters=[NCR_PARAM],
             output="screen",
         ),

@@ -25,6 +25,11 @@
   <exec_depend>bebop_control</exec_depend>
   <exec_depend>rho_filter</exec_depend>
   <exec_depend>indoor_lab_viz</exec_depend>
+  <exec_depend>bebop_server</exec_depend>
+  <exec_depend>bebop_client</exec_depend>
+  <exec_depend>ncr_cbf</exec_depend>
+  <exec_depend>python3-pytz</exec_depend>
+  <exec_depend>python3-yaml</exec_depend>
 
   <export>
     <build_type>ament_cmake</build_type>
