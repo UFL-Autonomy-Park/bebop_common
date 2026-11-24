@@ -1,4 +1,4 @@
-/bebop112/bebop_client:
+/bebop112/bebop_client_node:
   ros__parameters:
     bebop_id: bebop112 # string
     pose_topic: /vrpn_mocap/bebop112/pose # string

@@ -115,7 +115,7 @@ def generate_launch_description():
         # bebop112 support
         Node(
             package="ros2_bebop_driver",
-            executable="bebop_driver_node",  # check this
+            executable="bebop_driver",  # check this
             name="bebop_driver_node",
             namespace="bebop112",
             parameters=[BEBOP_PARAM],
@@ -142,7 +142,7 @@ def generate_launch_description():
             executable="bebop_client_node",
             name="bebop_client_node",
             namespace="bebop112",
-            parameters=[BEBOP_PARAM],
+            parameters=[CLIENT_PARAM],
             output="screen",
         ),
         Node(
